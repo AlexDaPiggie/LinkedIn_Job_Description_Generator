@@ -221,8 +221,7 @@ def auth_change_username(request: ChangeUsernameRequest, authorization: str | No
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://127.0.0.1:5500",
-        "https://linked-in-gen-ai.vercel.app",
+        "https://linkedingenai.tech",
     ],
     allow_credentials=False,
     allow_methods=["*"],
