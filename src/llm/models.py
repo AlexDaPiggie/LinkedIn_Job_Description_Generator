@@ -1,6 +1,5 @@
 MODEL_FALLBACKS = {
     "google/gemini-2.5-flash-lite": [
-        "openai/gpt-4o",
         "openai/gpt-4o-mini",
         "mistralai/mistral-small-24b-instruct-2501",
     ]

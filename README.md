@@ -1,14 +1,14 @@
 # [Linked In GenAI(Click to see the Website)](https://linked-in-gen-ai.vercel.app/)
-
-End-to-end GenAI application that turns structured intake answers into polished, LinkedIn-ready job descriptions with real-time prompt refinement, multi-provider LLM benchmarking, credit billing, and user authentication.
-
-On a Thursday's evening, Huy and I was fiddling around on LinkedIn, realizing that most Job Description follows a specific structure. We tried generating that on some free subscription AI models and the result was not so good. So that day, `LinkedIn Job Description GenAI` was born, simply because we feel like we could do better.
-
-Special thanks to my friend [Huy Phan, a.k.a. Hertzy](https://hertzy-da-poet.github.io/Hugo-Portfolio), for bringing the web interface into life. Hertzy implemented the entire front end and crafted the visual effects that shape the user experience.
+## About
+- An end-to-end GenAI web-app to generate LinkedIn-ready Job Description Forms from user's descriptions. 
+- Better than most free-tier AI models, our app guarantees the output with professional LinkedIn Layout, with user-friendly interface, and very detailed output.
+- Different from other apps on the market which just generate, [linked-in-gen-ai](https://linked-in-gen-ai.vercel.app/) goes even further, allowing users to refine their output as much as they want withotu losing any information. 
+- The App supports EXPORT Word file or COPY & PASTE straight to LinkedIn
+- Granting 30 free credits to every new user, and could be purchased more with only 1$/30 credits, we aspire to faciliate HR's as much as possible.
 
 ---
 
-## Authors & Acknowledgements
+## Authors
 
 | **Phong Nguyen (Alex)** | **Huy Phan (Hertzy)** |
 |:---|:---|
@@ -19,14 +19,14 @@ Special thanks to my friend [Huy Phan, a.k.a. Hertzy](https://hertzy-da-poet.git
 
 ---
 
-## Key Features
+## Primary Features
 
-- **Step-by-step questionaires**: User answers questions one by one. Required questions can't be skipped, optional ones can. These answers are then used to generate the draft.
-- **Strict JSON format**: Model outputs clean JSON matching Pydantic schema `JobDescriptionDraft`. This is to guarantee the output always follow LinkedIn structures, minimize problems caused by hallucination (broken text, missing section, ...).
-- **Markdown Converter**: Turns JSON draft into Markdown with headres and bullet points/paragrah (depending on the question)
-- **Interactive edit (Refine feature)**: user can type custom feedback (e.g. "make it sound start-up like, add Docker into requirments, remove the last bulletpoints,..."). Model edits draft without losing existing facts.
-- **Preventing Confusion between versions (`draft_outdated`)**: If user changes erlier answers after making a draft, app blocks `refine` feature until user clicks `generate` again. Stop model from mixing old and new info  
-- **Production Backend**: FastAPI backend with Supabase login, SlowAPI limit, and Stripe credits system.
+- **Simple Guiding Questions**: Provide simple questions for users to describe their form (e.g. company's name, length, tone,...). 
+- **Guarantee LinkedIn Format**: Model outputs clean JSON matching Pydantic schema in `JobDescriptionDraft`. This feature guarantees that the output will always follow LinkedIn format, minimize hallucination (e.g. broken text, missing section, ...).
+- **Markdown Format**: From JSON draft, this feature converst the messy JSON data into well-formatted Markdown file with headers & bullet points.
+- **Refine requests**: After receiving the draft of the Job Description Form, users can type their feedbacks of how the draft should be improved (e.g. "make it more professional, remove the last bulletpoints,..."). Such requests will be applied to the draft by the model while stil retaining the existing information.
+- **Prevent mismatch between different versions**: In case users change their answers after having generated a draft, the web app will blocks `refine` feature until user clicks `generate` to generate a new draft again. This is to preven the model from confusing the old and new information. 
+- **User Login/Signup & Paymenbt**: Crea te FastAPI endpoints for Supabase login, and Stripe credits payment plan to purchase new credits (1$/30 credits).
 
 ---
 
@@ -117,19 +117,18 @@ Measures end-to-end response time (seconds) across all test scenarios.
   <img src="front_end/images/eval_latency_comparison.png" alt="Average Generation Latency per Model" width="85%"/>
 </p>
 
-* Fast, lightweight models like `gemini-2.5-flash-lite` and `gpt-4o-mini` delivered sub-2s generation times suitable for interactive applications.
-* Larger open-weights models exhibited higher inference latency depending on endpoint hosting infrastructure.
+* Fast models like `gemini-2.5-flash-lite` and `gpt-4o-mini` can generate a draft in less that 2 seconds, which is highly suitable for this project.
+* Larger open-weight models showed much higher latency depending on endpoint hosting infrastructure.
 
 ## Model Sequencing & Fallback Architecture
 
-Based on benchmark results, the application implements an automated model sequencing and fallback options:
+Based on benchmark results (see more in [Model_Comparison.ipynb](src/evaluation/Model_Comparison_Analysis.ipynb)), I created an automated model sequence and fallback options in case the current one is unavailable:
 
-* **Primary Model (`google/gemini-2.5-flash-lite`)**:
-  * Chosen for its top overall performance: sub-2s generation latency, 100% schema and constraint pass rate, and high LinkedIn readiness scores at low token costs.
+* **Primary Model: google/gemini-2.5-flash-lite**
+  * Chosen for its top overall performance: latency < 2s, 100% test-case pass rate, and high LinkedIn readiness scores with low token costs.
 * **Fallback Options**:
-  1. `openai/gpt-4o`: SOTA reasoning backup if the primary model encounters rate limits or provider downtime.
-  2. `openai/gpt-4o-mini`: Cost-efficient structured output backup.
-  3. `mistralai/mistral-small-24b-instruct-2501`: High-speed open-weights alternative.
+  * openai/gpt-4o-mini
+  * mistralai/mistral-small-24b-instruct-2501
   
 ---
 
