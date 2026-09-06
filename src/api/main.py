@@ -2,6 +2,7 @@ import os
 import stripe
 from src.api.schemas import AuthLoginRequest, AuthSignupRequest, AuthResponse
 from fastapi import FastAPI, HTTPException, Request, Header
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from slowapi import _rate_limit_exceeded_handler
@@ -290,3 +291,8 @@ def refine (
 @app.get ("/markdown/{filename}", response_class=PlainTextResponse)
 def get_markdown (filename: str): 
     return load_markdown(filename)
+
+# Mount frontend directory to serve HTML/CSS/JS directly at "/"
+frontend_dir = Path(__file__).resolve().parent.parent.parent / "front_end"
+if frontend_dir.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
