@@ -221,7 +221,7 @@ def auth_change_username(request: ChangeUsernameRequest, authorization: str | No
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://linkedingenai.tech",
+        "https://www.linkedingenai.tech/",
     ],
     allow_credentials=False,
     allow_methods=["*"],
